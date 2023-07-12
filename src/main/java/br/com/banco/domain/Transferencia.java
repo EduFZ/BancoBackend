@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class Transferencia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Date data_transferencia;
+    private LocalDate data_transferencia;
     private Double valor;
     private String tipo;
 

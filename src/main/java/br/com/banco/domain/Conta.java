@@ -16,11 +16,11 @@ import javax.validation.constraints.NotNull;
 public class Conta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "id_conta")
+    @Column(name = "id_conta")
     private Integer idConta;
 
     @NotNull
     @NotEmpty(message = "O nome do responsável da conta não pode estar vazio")
-    @JoinColumn(name = "nome_responsavel")
+    @Column(name = "nome_responsavel")
     private String nomeResponsavel;
 }
