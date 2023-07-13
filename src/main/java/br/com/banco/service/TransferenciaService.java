@@ -18,8 +18,8 @@ public class TransferenciaService {
         this.transferenciaRepository = transferenciaRepository;
     }
 
-    public List<Transferencia> findTransferencias(String nomeOperador, LocalDate dataTransferencia) {
-        return transferenciaRepository.findTransferencias(nomeOperador, dataTransferencia);
+    public List<Transferencia> findTransferencias(String nomeOperador, LocalDate dataTransferenciaInicial, LocalDate dataTransferenciaFinal) {
+        return transferenciaRepository.findTransferencias(nomeOperador, dataTransferenciaInicial, dataTransferenciaFinal);
     }
 
 }

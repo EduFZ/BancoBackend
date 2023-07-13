@@ -25,9 +25,8 @@ public class Transferencia {
 
     @NotNull
     @NotEmpty(message = "O nome do responsável da conta não pode estar vazio")
-    @ManyToOne
-    @JoinColumn(name = "nome_operador_transacao", referencedColumnName = "nome_responsavel")
-    private Conta nomeOperadorTransacao;
+    @Column(name = "nome_operador_transacao")
+    private String nomeOperadorTransacao;
 
     @ManyToOne
     @JoinColumn(name = "conta_id", referencedColumnName = "id_conta")

@@ -12,8 +12,13 @@ import java.util.List;
 @Repository
 public interface TransferenciaRepository extends PagingAndSortingRepository<Transferencia, Integer> {
 
-    @Query("SELECT f FROM Transferencia f WHERE (:nomeOperadorTransacao IS NULL OR f.nomeOperadorTransacao = :nomeOperadorTransacao) AND (:dataTransferencia IS NULL OR f.dataTransferencia >= :dataTransferencia) AND (:dataTransferencia IS NULL OR f.dataTransferencia <= :dataTransferencia)")
-    List<Transferencia> findTransferencias(@Param("nomeOperadorTransacao") String nomeOperadorTransacao, @Param("dataTransferencia") LocalDate dataTransferencia);
+    @Query("SELECT f FROM Transferencia f WHERE " +
+            "(:nomeOperadorTransacao IS NULL OR f.nomeOperadorTransacao = :nomeOperadorTransacao)" +
+            " AND (:dataTransferenciaInicial IS NULL OR f.dataTransferencia >= :dataTransferenciaInicial)" +
+            " AND (:dataTransferenciaFinal IS NULL OR f.dataTransferencia <= :dataTransferenciaFinal)")
+    List<Transferencia> findTransferencias(@Param("nomeOperadorTransacao") String nomeOperadorTransacao,
+                                           @Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial,
+                                           @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal);
 
 
 }
