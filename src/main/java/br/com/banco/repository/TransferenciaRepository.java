@@ -12,13 +12,24 @@ import java.util.List;
 @Repository
 public interface TransferenciaRepository extends PagingAndSortingRepository<Transferencia, Integer> {
 
+    List<Transferencia> findAll();
+
+    @Query("SELECT f FROM Transferencia f WHERE f.nomeOperadorTransacao = :nomeOperadorTransacao")
+    List<Transferencia> findByNomeOperadorTransacao(@Param("nomeOperadorTransacao") String nomeOperadorTransacao);
+
+    @Query("SELECT f FROM Transferencia f WHERE f.dataTransferencia >= :dataTransferenciaInicial")
+    List<Transferencia> findTransferenciaFromDataInicial(@Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial);
+
+    @Query("SELECT f FROM Transferencia f WHERE f.dataTransferencia <= :dataTransferenciaFinal")
+    List<Transferencia> findTransferenciaUntilDataFinal(@Param("dataTransferenciaFinal") LocalDate dataTrasferenciaFinal);
+
     @Query("SELECT f FROM Transferencia f WHERE " +
             "(:nomeOperadorTransacao IS NULL OR f.nomeOperadorTransacao = :nomeOperadorTransacao)" +
             " AND (:dataTransferenciaInicial IS NULL OR f.dataTransferencia >= :dataTransferenciaInicial)" +
             " AND (:dataTransferenciaFinal IS NULL OR f.dataTransferencia <= :dataTransferenciaFinal)")
-    List<Transferencia> findTransferencias(@Param("nomeOperadorTransacao") String nomeOperadorTransacao,
-                                           @Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial,
-                                           @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal);
+    List<Transferencia> findTransferenciasComTodosOsFiltros(@Param("nomeOperadorTransacao") String nomeOperadorTransacao,
+                                                            @Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial,
+                                                            @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal);
 
 
 }

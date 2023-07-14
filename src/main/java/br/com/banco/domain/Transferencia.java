@@ -18,7 +18,7 @@ public class Transferencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "data_Transferencia")
+    @Column(name = "data_transferencia")
     private LocalDate dataTransferencia;
     private Double valor;
     private String tipo;
