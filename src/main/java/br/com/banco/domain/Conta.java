@@ -1,8 +1,6 @@
 package br.com.banco.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,6 +11,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Builder
 @Table(name = "conta")
+@Getter
+@Setter
 public class Conta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,8 +1,6 @@
 package br.com.banco.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +12,8 @@ import java.time.LocalDate;
 @Entity
 @Builder
 @Table(name = "transferencia")
+@Getter
+@Setter
 public class Transferencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

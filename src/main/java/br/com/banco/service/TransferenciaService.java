@@ -25,20 +25,34 @@ public class TransferenciaService {
         return transferenciaRepository.findAll();
     }
 
-    public List<Transferencia> findByNomeOperadorTransacao(String nomeOperadorTransacao) {
-        return transferenciaRepository.findByNomeOperadorTransacao(nomeOperadorTransacao);
+    public Page<TransferenciaDto> findByFilters(String nomeOperador, LocalDate dataInicial, LocalDate dataFinal, Pageable pageable) {
+        Page<Transferencia> transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal, pageable);
+        return transferencias.map(this::convertToDto);
     }
 
-    public List<Transferencia> findTransferenciaFromDataInicial(LocalDate dataTransferenciaInicial){
-        return transferenciaRepository.findTransferenciaFromDataInicial(dataTransferenciaInicial);
+    public TransferenciaDto convertToDto(Transferencia transferencia){
+        TransferenciaDto transferenciaDto = new TransferenciaDto();
+        transferenciaDto.setId(transferencia.getId());
+        transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
+        transferenciaDto.setDataTransferencia(transferencia.getDataTransferencia());
+        return transferenciaDto;
     }
 
-    public List<Transferencia> findTransferenciaUntilDataFinal(LocalDate dataTransferenciaFinal){
-        return transferenciaRepository.findTransferenciaUntilDataFinal(dataTransferenciaFinal);
-    }
+//    public List<Transferencia> findByNomeOperadorTransacao(String nomeOperadorTransacao) {
+//        return transferenciaRepository.findByNomeOperadorTransacao(nomeOperadorTransacao);
+//    }
+//
+//    public List<Transferencia> findTransferenciaFromDataInicial(LocalDate dataTransferenciaInicial){
+//        return transferenciaRepository.findTransferenciaFromDataInicial(dataTransferenciaInicial);
+//    }
+//
+//    public List<Transferencia> findTransferenciaUntilDataFinal(LocalDate dataTransferenciaFinal){
+//        return transferenciaRepository.findTransferenciaUntilDataFinal(dataTransferenciaFinal);
+//    }
+//
+//    public List<Transferencia> findTransferenciasComTodosOsFiltros(String nomeOperador, LocalDate dataTransferenciaInicial, LocalDate dataTransferenciaFinal) {
+//        return transferenciaRepository.findTransferenciasComTodosOsFiltros(nomeOperador, dataTransferenciaInicial, dataTransferenciaFinal);
+//    }
 
-    public List<Transferencia> findTransferenciasComTodosOsFiltros(String nomeOperador, LocalDate dataTransferenciaInicial, LocalDate dataTransferenciaFinal) {
-        return transferenciaRepository.findTransferenciasComTodosOsFiltros(nomeOperador, dataTransferenciaInicial, dataTransferenciaFinal);
-    }
 
 }
