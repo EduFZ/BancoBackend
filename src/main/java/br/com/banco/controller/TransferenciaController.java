@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/transferencias")
@@ -47,7 +48,7 @@ public class TransferenciaController {
             @ApiResponse(code = 200, message = "Lista com as Transferências de acordo com os filtros repassados"),
             @ApiResponse(code = 404, message = "Registros não encontrados com esses parâmetros")
     })
-    public ResponseEntity<Page<TransferenciaDto>> findByFilters(@RequestParam(value = "nomeOperador", required = false) String nomeOperador,
+    public ResponseEntity<List<TransferenciaDto>> findByFilters(@RequestParam(value = "nomeOperador", required = false) String nomeOperador,
                                                                 @RequestParam(value = "dataInicial", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicial,
                                                                 @RequestParam(value = "dataFinal", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFinal,
                                                                 @PageableDefault(size = 10) Pageable pageable){
@@ -55,72 +56,34 @@ public class TransferenciaController {
         if (nomeOperador == null && dataInicial == null && dataFinal == null){
             List<Transferencia> transferencias = transferenciaService.findTransferencia();
         } else {
-            Page<Transferencia> transferencias;
+            List<Transferencia> transferencias;
 
             if (nomeOperador != null && dataInicial != null && dataFinal != null){
                 transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal, pageable);
             } else if (nomeOperador != null) {
-                transferencias = transferenciaRepository.findByNomeOperadorTransacao(nomeOperador);
+                transferencias = transferenciaRepository.findByNomeOperadorTransacao(nomeOperador, pageable);
             } else if (dataInicial != null) {
-                transferencias = transferenciaRepository.findTransferenciaFromDataInicial(dataInicial);
+                transferencias = transferenciaRepository.findTransferenciaFromDataInicial(dataInicial, pageable);
             } else if (dataFinal != null) {
-
+                transferencias = transferenciaRepository.findTransferenciaUntilDataFinal(dataFinal, pageable);
+            }else{
+                transferencias = transferenciaRepository.findByDataBetween(dataInicial, dataFinal, pageable);
             }
+            List<TransferenciaDto> transferenciaDto = transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
 
+            return ResponseEntity.ok(transferenciaDto);
         }
 
-        return ResponseEntity.ok(transferenciaService.findByFilters(nomeOperador, dataInicial, dataFinal, pageable));
+        return ResponseEntity.ok((List<TransferenciaDto>) transferenciaService.findByFilters(nomeOperador, dataInicial, dataFinal, pageable));
     }
 
-
-
-//    @GetMapping("/operador/{nomeOperadorTransacao}")
-//    public ResponseEntity<List<Transferencia>> findByNomeOperadorTransacao (@PathVariable String nomeOperadorTransacao) {
-//        List<Transferencia> transferencias = transferenciaService.findByNomeOperadorTransacao(nomeOperadorTransacao);
-//        return ResponseEntity.ok(transferencias);
-//    }
-//
-//    @GetMapping("/dataInicial/{dataTransferenciaInicial}")
-//    public ResponseEntity<List<Transferencia>> getTransferenciaFromDataInicial(@PathVariable String dataTransferenciaInicial) {
-//        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDate parseDateInicial = LocalDate.parse(dataTransferenciaInicial, inputFormatter);
-//
-//        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        String formatteDateInicial = parseDateInicial.format(outputFormatter);
-//
-//        LocalDate dateInicialFormatted = LocalDate.parse(formatteDateInicial, outputFormatter);
-//
-//        List<Transferencia> transferencias = transferenciaService.findTransferenciaFromDataInicial(dateInicialFormatted);
-//        return ResponseEntity.ok(transferencias);
-//    }
-//
-//    public ResponseEntity<List<Transferencia>> getTransferenciaUntilDataFinal(@PathVariable String dataTransferenciaFinal) {
-//        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDate parseDataFinal = LocalDate.parse(dataTransferenciaFinal, inputFormatter);
-//
-//        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        String formatteDateFinal = parseDataFinal.format(outputFormatter);
-//
-//        LocalDate dateFinalFormatted = LocalDate.parse(formatteDateFinal, outputFormatter);
-//
-//        List<Transferencia> transferencias = transferenciaService.findTransferenciaUntilDataFinal(dateFinalFormatted);
-//        return ResponseEntity.ok(transferencias);
-//    }
-//
-//    @GetMapping("/{nomeOperador}/{dataTransferenciaInicial}/{dataTransferenciaFinal}")
-//    public ResponseEntity<List<Transferencia>>getTransferenciasComTodosOsFiltros(@PathVariable String nomeOperador,
-//                                                                @PathVariable String dataTransferenciaInicial,
-//                                                                @PathVariable String dataTransferenciaFinal) {
-//        LocalDate parseDate = LocalDate.parse(dataTransferenciaInicial);
-//        LocalDate parseDateFinal = LocalDate.parse(dataTransferenciaFinal);
-//        List<Transferencia> transferencias = transferenciaService.findTransferenciasComTodosOsFiltros(nomeOperador, parseDate, parseDateFinal);
-//        return ResponseEntity.ok(transferencias);
-//    }
-
-
-
-
-
+    public TransferenciaDto convertToDto(Transferencia transferencia){
+        TransferenciaDto transferenciaDto = new TransferenciaDto();
+        transferenciaDto.setId(transferencia.getId());
+        transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
+        transferenciaDto.setDataTransferencia(transferencia.getDataTransferencia());
+        return transferenciaDto;
+    }
 
 
 }

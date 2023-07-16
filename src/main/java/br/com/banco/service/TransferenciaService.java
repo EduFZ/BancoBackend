@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransferenciaService {
@@ -25,10 +26,12 @@ public class TransferenciaService {
         return transferenciaRepository.findAll();
     }
 
-    public Page<TransferenciaDto> findByFilters(String nomeOperador, LocalDate dataInicial, LocalDate dataFinal, Pageable pageable) {
-        Page<Transferencia> transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal, pageable);
-        return transferencias.map(this::convertToDto);
+    public List<TransferenciaDto> findByFilters(String nomeOperador, LocalDate dataInicial, LocalDate dataFinal, Pageable pageable) {
+        List<Transferencia> transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal, pageable);
+        return transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
     }
+
+
 
     public TransferenciaDto convertToDto(Transferencia transferencia){
         TransferenciaDto transferenciaDto = new TransferenciaDto();
