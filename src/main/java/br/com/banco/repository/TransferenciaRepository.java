@@ -17,27 +17,18 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, In
     List<Transferencia> findAll();
 
     @Query("SELECT t FROM Transferencia t WHERE t.nomeOperadorTransacao = :nomeOperadorTransacao AND t.dataTransferencia BETWEEN :dataInicial AND :dataFinal")
-    List<Transferencia> findByOperadorTransacaoAndDataBetween(@Param("nomeOperadorTransacao") String nomeOperadorTransacao, @Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal, Pageable pageable);
+    List<Transferencia> findByOperadorTransacaoAndDataBetween(@Param("nomeOperadorTransacao") String nomeOperadorTransacao, @Param("dataInicial") LocalDate dataInicial, @Param("dataFinal") LocalDate dataFinal);
 
     @Query("SELECT f FROM Transferencia f WHERE f.nomeOperadorTransacao = :nomeOperadorTransacao")
-    List<Transferencia> findByNomeOperadorTransacao(@Param("nomeOperadorTransacao") String nomeOperadorTransacao, Pageable pageable);
+    List<Transferencia> findByNomeOperadorTransacao(@Param("nomeOperadorTransacao") String nomeOperadorTransacao);
 
     @Query("SELECT f FROM Transferencia f WHERE f.dataTransferencia >= :dataTransferenciaInicial")
-    List<Transferencia> findTransferenciaFromDataInicial(@Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial, Pageable pageable);
+    List<Transferencia> findTransferenciaFromDataInicial(@Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial);
 
     @Query("SELECT f FROM Transferencia f WHERE f.dataTransferencia <= :dataTransferenciaFinal")
-    List<Transferencia> findTransferenciaUntilDataFinal(@Param("dataTransferenciaFinal") LocalDate dataTrasferenciaFinal, Pageable pageable);
+    List<Transferencia> findTransferenciaUntilDataFinal(@Param("dataTransferenciaFinal") LocalDate dataTrasferenciaFinal);
 
     @Query("SELECT t FROM Transferencia t WHERE t.dataTransferencia BETWEEN :dataTransferenciaInicial AND :dataTransferenciaFinal")
-    List<Transferencia> findByDataBetween(@Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial, @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal, Pageable pageable);
-
-//    @Query("SELECT f FROM Transferencia f WHERE " +
-//            "(:nomeOperadorTransacao IS NULL OR f.nomeOperadorTransacao = :nomeOperadorTransacao)" +
-//            " AND (:dataTransferenciaInicial IS NULL OR f.dataTransferencia >= :dataTransferenciaInicial)" +
-//            " AND (:dataTransferenciaFinal IS NULL OR f.dataTransferencia <= :dataTransferenciaFinal)")
-//    List<Transferencia> findTransferenciasComTodosOsFiltros(@Param("nomeOperadorTransacao") String nomeOperadorTransacao,
-//                                                            @Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial,
-//                                                            @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal);
-
+    List<Transferencia> findByDataBetween(@Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial, @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal);
 
 }

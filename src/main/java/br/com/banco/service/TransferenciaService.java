@@ -26,8 +26,8 @@ public class TransferenciaService {
         return transferenciaRepository.findAll();
     }
 
-    public List<TransferenciaDto> findByFilters(String nomeOperador, LocalDate dataInicial, LocalDate dataFinal, Pageable pageable) {
-        List<Transferencia> transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal, pageable);
+    public List<TransferenciaDto> findByFilters(String nomeOperador, LocalDate dataInicial, LocalDate dataFinal) {
+        List<Transferencia> transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal);
         return transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 

@@ -17,6 +17,8 @@ import java.time.LocalDate;
 @Component
 public class TransferenciaDto {
     private Integer id;
+    private Double valor;
+    private String tipo;
     private LocalDate dataTransferencia;
     private String nomeOperador;
 
