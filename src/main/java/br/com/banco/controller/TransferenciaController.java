@@ -45,7 +45,7 @@ public class TransferenciaController {
         return ResponseEntity.ok(transferencias);
     }
 
-    @GetMapping("/findByFilters/nomeOperador/{nomeOperador}/dataInicial/{dataInicial}/dataFinal/{dataFinal}")
+    @GetMapping("/findByFilters")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lista com as Transferências de acordo com os filtros repassados"),
             @ApiResponse(code = 404, message = "Registros não encontrados com esses parâmetros")
