@@ -45,41 +45,48 @@ public class TransferenciaController {
         return ResponseEntity.ok(transferencias);
     }
 
-    @GetMapping("/findByFilters")
+    @GetMapping("/filter")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lista com as Transferências de acordo com os filtros repassados"),
             @ApiResponse(code = 404, message = "Registros não encontrados com esses parâmetros")
     })
-    public ResponseEntity<List<TransferenciaDto>> findByFilters(@PathVariable(value = "nomeOperador", required = false) String nomeOperador,
-                                                                @PathVariable(value = "dataInicial", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicial,
-                                                                @PathVariable(value = "dataFinal", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFinal){
+    public ResponseEntity<List<TransferenciaDto>> findByFilters(@RequestParam(value = "nomeOperador", required = false) String nomeOperador,
+                                                                @RequestParam(value = "dataInicial",  required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicial,
+                                                                @RequestParam(value = "dataFinal",    required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFinal){
 
         logger.info("nomeOperador: {}", nomeOperador);
         logger.info("dataInicial: {}", dataInicial);
         logger.info("dataFinal", dataFinal);
 
+
         if (nomeOperador == null && dataInicial == null && dataFinal == null){
             List<Transferencia> transferencias = transferenciaService.findTransferencia();
         } else {
             List<Transferencia> transferencias;
-
             if (nomeOperador != null && dataInicial != null && dataFinal != null){
-                transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal);
+                LocalDate dataInicial1 = LocalDate.parse(dataInicial);
+                LocalDate dataFinal1   = LocalDate.parse(dataFinal);
+                transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial1 , dataFinal1);
             } else if (nomeOperador != null) {
                 transferencias = transferenciaRepository.findByNomeOperadorTransacao(nomeOperador);
             } else if (dataInicial != null) {
-                transferencias = transferenciaRepository.findTransferenciaFromDataInicial(dataInicial);
+                LocalDate dataInicial1 = LocalDate.parse(dataInicial);
+                transferencias = transferenciaRepository.findTransferenciaFromDataInicial(dataInicial1);
             } else if (dataFinal != null) {
-                transferencias = transferenciaRepository.findTransferenciaUntilDataFinal(dataFinal);
+                LocalDate dataFinal1 = LocalDate.parse(dataFinal);
+                transferencias = transferenciaRepository.findTransferenciaUntilDataFinal(dataFinal1);
             }else{
-                transferencias = transferenciaRepository.findByDataBetween(dataInicial, dataFinal);
+                LocalDate dataInicial1 = LocalDate.parse(dataInicial);
+                LocalDate dataFinal1 = LocalDate.parse(dataFinal);
+                transferencias = transferenciaRepository.findByDataBetween(dataInicial1, dataFinal1);
             }
             List<TransferenciaDto> transferenciaDto = transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
 
             return ResponseEntity.ok(transferenciaDto);
         }
+        return null;
 
-        return ResponseEntity.ok((List<TransferenciaDto>) transferenciaService.findByFilters(nomeOperador, dataInicial, dataFinal));
+        //return ResponseEntity.ok((List<TransferenciaDto>) transferenciaService.findByFilters(nomeOperador, dataInicial1, dataFinal1));
     }
 
     public TransferenciaDto convertToDto(Transferencia transferencia){
