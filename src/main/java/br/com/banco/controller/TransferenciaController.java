@@ -58,12 +58,13 @@ public class TransferenciaController {
         logger.info("dataInicial: {}", dataInicial);
         logger.info("dataFinal", dataFinal);
 
+        List<Transferencia> transferencias;
 
         if (nomeOperador == null && dataInicial == null && dataFinal == null){
-            List<Transferencia> transferencias = transferenciaService.findTransferencia();
-        } else {
-            List<Transferencia> transferencias;
-            if (nomeOperador != null && dataInicial != null && dataFinal != null){
+            transferencias = transferenciaService.findTransferencia();
+        } else if (nomeOperador != null && dataInicial != null && dataFinal != null){
+
+
                 LocalDate dataInicial1 = LocalDate.parse(dataInicial);
                 LocalDate dataFinal1   = LocalDate.parse(dataFinal);
                 transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial1 , dataFinal1);
@@ -82,12 +83,16 @@ public class TransferenciaController {
             }
             List<TransferenciaDto> transferenciaDto = transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
 
+            if (transferenciaDto.isEmpty()) {
+                return ResponseEntity.notFound().build(); // Responde com status 404 se a lista estiver vazia
+            }
+
             return ResponseEntity.ok(transferenciaDto);
         }
-        return null;
+
 
         //return ResponseEntity.ok((List<TransferenciaDto>) transferenciaService.findByFilters(nomeOperador, dataInicial1, dataFinal1));
-    }
+
 
     public TransferenciaDto convertToDto(Transferencia transferencia){
         TransferenciaDto transferenciaDto = new TransferenciaDto();
