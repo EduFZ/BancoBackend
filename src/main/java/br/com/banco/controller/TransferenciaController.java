@@ -66,13 +66,6 @@ public class TransferenciaController {
 
                 transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial1 , dataFinal1);
 
-                if (nomeOperador.isEmpty() || dataInicial.isEmpty() || dataFinal.isEmpty()) {
-
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-
-                    //throw new ExceptionMessage("Nenhum parâmetro encontrado");
-
-                }
 
             } else if (nomeOperador != null) {
                 transferencias = transferenciaRepository.findByNomeOperadorTransacao(nomeOperador);
