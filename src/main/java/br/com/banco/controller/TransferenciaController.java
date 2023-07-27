@@ -2,6 +2,7 @@ package br.com.banco.controller;
 
 import br.com.banco.domain.Transferencia;
 import br.com.banco.dto.TransferenciaDto;
+import br.com.banco.exceptions.ExceptionMessage;
 import br.com.banco.repository.TransferenciaRepository;
 import br.com.banco.service.TransferenciaService;
 import io.swagger.annotations.ApiResponse;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +54,7 @@ public class TransferenciaController {
     })
     public ResponseEntity<List<TransferenciaDto>> findByFilters(@RequestParam(value = "nomeOperador", required = false) String nomeOperador,
                                                                 @RequestParam(value = "dataInicial",  required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicial,
-                                                                @RequestParam(value = "dataFinal",    required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFinal){
+                                                                @RequestParam(value = "dataFinal",    required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFinal) throws ExceptionMessage {
 
         logger.info("nomeOperador: {}", nomeOperador);
         logger.info("dataInicial: {}", dataInicial);
@@ -64,9 +66,14 @@ public class TransferenciaController {
             transferencias = transferenciaService.findTransferencia();
         } else if (nomeOperador != null && dataInicial != null && dataFinal != null){
 
-
                 LocalDate dataInicial1 = LocalDate.parse(dataInicial);
                 LocalDate dataFinal1   = LocalDate.parse(dataFinal);
+
+                //--------------------- Tratar Erro das mensagens personalizadas nas exceções
+            if (nomeOperador.isEmpty() || dataInicial.isEmpty() || dataFinal.isEmpty()) {
+                //return ResponseEntity.notFound().build(); // Responde com status 404 se a lista estiver vazia
+                throw new ExceptionMessage("Nenhum parâmetro encontrado");
+            }
                 transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial1 , dataFinal1);
             } else if (nomeOperador != null) {
                 transferencias = transferenciaRepository.findByNomeOperadorTransacao(nomeOperador);
@@ -81,11 +88,15 @@ public class TransferenciaController {
                 LocalDate dataFinal1 = LocalDate.parse(dataFinal);
                 transferencias = transferenciaRepository.findByDataBetween(dataInicial1, dataFinal1);
             }
+
+            if (transferencias.isEmpty()) {
+                //return ResponseEntity.notFound().build(); // Responde com status 404 se a lista estiver vazia
+                throw new ExceptionMessage("Nenhum parâmetro encontrado");
+            }
+
             List<TransferenciaDto> transferenciaDto = transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
 
-            if (transferenciaDto.isEmpty()) {
-                return ResponseEntity.notFound().build(); // Responde com status 404 se a lista estiver vazia
-            }
+
 
             return ResponseEntity.ok(transferenciaDto);
         }
