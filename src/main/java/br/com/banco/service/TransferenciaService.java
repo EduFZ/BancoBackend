@@ -31,31 +31,14 @@ public class TransferenciaService {
         return transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-
-
     public TransferenciaDto convertToDto(Transferencia transferencia){
         TransferenciaDto transferenciaDto = new TransferenciaDto();
         transferenciaDto.setId(transferencia.getId());
-        transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
+        transferenciaDto.setValor(transferencia.getValor());
+        transferenciaDto.setTipo(transferencia.getTipo());
         transferenciaDto.setDataTransferencia(transferencia.getDataTransferencia());
+        transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
         return transferenciaDto;
     }
-
-//    public List<Transferencia> findByNomeOperadorTransacao(String nomeOperadorTransacao) {
-//        return transferenciaRepository.findByNomeOperadorTransacao(nomeOperadorTransacao);
-//    }
-//
-//    public List<Transferencia> findTransferenciaFromDataInicial(LocalDate dataTransferenciaInicial){
-//        return transferenciaRepository.findTransferenciaFromDataInicial(dataTransferenciaInicial);
-//    }
-//
-//    public List<Transferencia> findTransferenciaUntilDataFinal(LocalDate dataTransferenciaFinal){
-//        return transferenciaRepository.findTransferenciaUntilDataFinal(dataTransferenciaFinal);
-//    }
-//
-//    public List<Transferencia> findTransferenciasComTodosOsFiltros(String nomeOperador, LocalDate dataTransferenciaInicial, LocalDate dataTransferenciaFinal) {
-//        return transferenciaRepository.findTransferenciasComTodosOsFiltros(nomeOperador, dataTransferenciaInicial, dataTransferenciaFinal);
-//    }
-
 
 }

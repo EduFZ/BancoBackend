@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,12 +42,6 @@ public class TransferenciaController {
 
     private static final Logger logger = LoggerFactory.getLogger(TransferenciaController.class);
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Transferencia>> getTransferencias(){
-        List<Transferencia> transferencias = transferenciaService.findTransferencia();
-        return ResponseEntity.ok(transferencias);
-    }
-
     @GetMapping("/filter")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lista com as Transferências de acordo com os filtros repassados"),
@@ -54,7 +49,7 @@ public class TransferenciaController {
     })
     public ResponseEntity<List<TransferenciaDto>> findByFilters(@RequestParam(value = "nomeOperador", required = false) String nomeOperador,
                                                                 @RequestParam(value = "dataInicial",  required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicial,
-                                                                @RequestParam(value = "dataFinal",    required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFinal) throws ExceptionMessage {
+                                                                @RequestParam(value = "dataFinal",    required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFinal) {
 
         logger.info("nomeOperador: {}", nomeOperador);
         logger.info("dataInicial: {}", dataInicial);
@@ -69,12 +64,16 @@ public class TransferenciaController {
                 LocalDate dataInicial1 = LocalDate.parse(dataInicial);
                 LocalDate dataFinal1   = LocalDate.parse(dataFinal);
 
-                //--------------------- Tratar Erro das mensagens personalizadas nas exceções
-            if (nomeOperador.isEmpty() || dataInicial.isEmpty() || dataFinal.isEmpty()) {
-                //return ResponseEntity.notFound().build(); // Responde com status 404 se a lista estiver vazia
-                throw new ExceptionMessage("Nenhum parâmetro encontrado");
-            }
                 transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial1 , dataFinal1);
+
+                if (nomeOperador.isEmpty() || dataInicial.isEmpty() || dataFinal.isEmpty()) {
+
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+                    //throw new ExceptionMessage("Nenhum parâmetro encontrado");
+
+                }
+
             } else if (nomeOperador != null) {
                 transferencias = transferenciaRepository.findByNomeOperadorTransacao(nomeOperador);
             } else if (dataInicial != null) {
