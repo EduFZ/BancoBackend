@@ -49,7 +49,7 @@ public class TransferenciaController {
     })
     public ResponseEntity<List<TransferenciaDto>> findByFilters(@RequestParam(value = "nomeOperador", required = false) String nomeOperador,
                                                                 @RequestParam(value = "dataInicial",  required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicial,
-                                                                @RequestParam(value = "dataFinal",    required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFinal) {
+                                                                @RequestParam(value = "dataFinal",    required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFinal) throws ExceptionMessage {
 
         logger.info("nomeOperador: {}", nomeOperador);
         logger.info("dataInicial: {}", dataInicial);
@@ -94,7 +94,7 @@ public class TransferenciaController {
         }
 
 
-        //return ResponseEntity.ok((List<TransferenciaDto>) transferenciaService.findByFilters(nomeOperador, dataInicial1, dataFinal1));
+
 
 
     public TransferenciaDto convertToDto(Transferencia transferencia){
