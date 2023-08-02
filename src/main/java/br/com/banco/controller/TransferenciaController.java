@@ -82,7 +82,6 @@ public class TransferenciaController {
             }
 
             if (transferencias.isEmpty()) {
-                //return ResponseEntity.notFound().build(); // Responde com status 404 se a lista estiver vazia
                 throw new ExceptionMessage("Nenhum parâmetro encontrado");
             }
 
@@ -101,6 +100,8 @@ public class TransferenciaController {
         TransferenciaDto transferenciaDto = new TransferenciaDto();
         transferenciaDto.setId(transferencia.getId());
         transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
+        transferenciaDto.setValor(transferencia.getValor());
+        transferenciaDto.setTipo(transferencia.getTipo());
         transferenciaDto.setDataTransferencia(transferencia.getDataTransferencia());
         return transferenciaDto;
     }
