@@ -1,6 +1,7 @@
 package br.com.banco.service;
 
 import br.com.banco.domain.Transferencia;
+import br.com.banco.dto.ConvertDto;
 import br.com.banco.dto.TransferenciaDto;
 import br.com.banco.repository.TransferenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +27,11 @@ public class TransferenciaService {
         return transferenciaRepository.findAll();
     }
 
+    ConvertDto converter = new ConvertDto();
+
     public List<TransferenciaDto> findByFilters(String nomeOperador, LocalDate dataInicial, LocalDate dataFinal) {
         List<Transferencia> transferencias = transferenciaRepository.findByOperadorTransacaoAndDataBetween(nomeOperador, dataInicial, dataFinal);
-        return transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
-    }
-
-    public TransferenciaDto convertToDto(Transferencia transferencia){
-        TransferenciaDto transferenciaDto = new TransferenciaDto();
-        transferenciaDto.setId(transferencia.getId());
-        transferenciaDto.setValor(transferencia.getValor());
-        transferenciaDto.setTipo(transferencia.getTipo());
-        transferenciaDto.setDataTransferencia(transferencia.getDataTransferencia());
-        transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
-        return transferenciaDto;
+        return transferencias.stream().map(converter::convertToDto).collect(Collectors.toList());
     }
 
 }

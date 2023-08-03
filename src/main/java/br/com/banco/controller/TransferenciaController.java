@@ -1,6 +1,7 @@
 package br.com.banco.controller;
 
 import br.com.banco.domain.Transferencia;
+import br.com.banco.dto.ConvertDto;
 import br.com.banco.dto.TransferenciaDto;
 import br.com.banco.exceptions.ExceptionMessage;
 import br.com.banco.repository.TransferenciaRepository;
@@ -85,7 +86,9 @@ public class TransferenciaController {
                 throw new ExceptionMessage("Nenhum parâmetro encontrado");
             }
 
-            List<TransferenciaDto> transferenciaDto = transferencias.stream().map(this::convertToDto).collect(Collectors.toList());
+            ConvertDto converter = new ConvertDto();
+
+            List<TransferenciaDto> transferenciaDto = transferencias.stream().map(converter::convertToDto).collect(Collectors.toList());
 
 
 
@@ -96,14 +99,14 @@ public class TransferenciaController {
 
 
 
-    public TransferenciaDto convertToDto(Transferencia transferencia){
-        TransferenciaDto transferenciaDto = new TransferenciaDto();
-        transferenciaDto.setId(transferencia.getId());
-        transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
-        transferenciaDto.setValor(transferencia.getValor());
-        transferenciaDto.setTipo(transferencia.getTipo());
-        transferenciaDto.setDataTransferencia(transferencia.getDataTransferencia());
-        return transferenciaDto;
-    }
+//    public TransferenciaDto convertToDto(Transferencia transferencia){
+//        TransferenciaDto transferenciaDto = new TransferenciaDto();
+//        transferenciaDto.setId(transferencia.getId());
+//        transferenciaDto.setNomeOperador(transferencia.getNomeOperadorTransacao());
+//        transferenciaDto.setValor(transferencia.getValor());
+//        transferenciaDto.setTipo(transferencia.getTipo());
+//        transferenciaDto.setDataTransferencia(transferencia.getDataTransferencia());
+//        return transferenciaDto;
+//    }
 
 }
