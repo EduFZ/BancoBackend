@@ -6,6 +6,7 @@ import br.com.banco.exceptions.ExceptionMessage;
 import br.com.banco.repository.TransferenciaRepository;
 import br.com.banco.service.TransferenciaService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,6 +31,7 @@ public class TransferenciaControllerTest {
     private TransferenciaRepository transferenciaRepository;
 
     @Test
+    @DisplayName("Retornar lista de transferencias quando não receber nenhum parâmetro")
     public void testFindByFiltersWithNullParameters() throws ExceptionMessage {
 
         ResponseEntity<List<TransferenciaDto>> findTransferenciaNull = transferenciaController.findByFilters(null, null, null);
