@@ -1,9 +1,6 @@
 package br.com.banco.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
@@ -12,6 +9,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Component
+@Builder
 public class TransferenciaDto {
     private Integer id;
     private Double valor;
