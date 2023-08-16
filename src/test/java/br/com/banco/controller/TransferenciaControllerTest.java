@@ -11,12 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -31,20 +29,21 @@ public class TransferenciaControllerTest {
 
     @BeforeEach
     void setUp() throws ExceptionMessage {
-        List<TransferenciaDto> listTransferencia = new ArrayList<>(List.of(TransferenciaCreator.createTransferencia()));
-        BDDMockito.when(transferenciaServiceMock.findByFilters(any(), any(), any())).thenReturn(listTransferencia);
+        //List<TransferenciaDto> listTransferencia = new ArrayList<>(List.of(TransferenciaCreator.createTransferencia()));
+        List<TransferenciaDto> listaTransf = Arrays.asList(TransferenciaCreator.createTransferencia());
+        BDDMockito.when(transferenciaServiceMock.findByFilters(any(), any(), any())).thenReturn(listaTransf);
     }
 
     @Test
     public void testFindByFiltersWithNullParameters() throws ExceptionMessage {
+        String expectedName = TransferenciaCreator.createTransferencia().getNomeOperador();
 
-        ResponseEntity<List<TransferenciaDto>> findTransferencias = transferenciaController.findByFilters(null, null, null);
+        List<TransferenciaDto> findTransferencias = transferenciaController.findByFilters(null, null, null).getBody();
 
-        List<TransferenciaDto> listTransferencia = findTransferencias.getBody();
-
+        Assertions.assertEquals(expectedName, findTransferencias.get(0).getNomeOperador());
         Assertions.assertNotNull(findTransferencias);
-        Assertions.assertNotNull(listTransferencia);
-        Assertions.assertFalse(listTransferencia.isEmpty());
+        Assertions.assertNotNull(findTransferencias);
+        Assertions.assertFalse(findTransferencias.isEmpty());
 
     }
 
