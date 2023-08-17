@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,13 +29,13 @@ public class TransferenciaControllerTest {
     @BeforeEach
     void setUp() throws ExceptionMessage {
         //List<TransferenciaDto> listTransferencia = new ArrayList<>(List.of(TransferenciaCreator.createTransferencia()));
-        List<TransferenciaDto> listaTransf = Arrays.asList(TransferenciaCreator.createTransferencia());
+        List<TransferenciaDto> listaTransf = Arrays.asList(TransferenciaCreator.createTransferenciaDto());
         BDDMockito.when(transferenciaServiceMock.findByFilters(any(), any(), any())).thenReturn(listaTransf);
     }
 
     @Test
     public void testFindByFiltersWithNullParameters() throws ExceptionMessage {
-        String expectedName = TransferenciaCreator.createTransferencia().getNomeOperador();
+        String expectedName = TransferenciaCreator.createTransferenciaDto().getNomeOperador();
 
         List<TransferenciaDto> findTransferencias = transferenciaController.findByFilters(null, null, null).getBody();
 
