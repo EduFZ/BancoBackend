@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -87,12 +88,12 @@ public class TransferenciaServiceTest {
         List<Transferencia> findTransferencias = transferenciaRepositoryMock
                 .findByNomeOperadorTransacao("Ciclano");
 
-        String nomeColetado = findTransferencias.toString();
+        Transferencia nomeColetado = findTransferencias.get(0);
 
         System.out.println("Nome esperado: " + expectedName);
-        System.out.println("Nome retornado: " + transferenciaRepositoryMock.findByNomeOperadorTransacao("Ciclano"));
+        System.out.println("Nome retornado: " + nomeColetado.getNomeOperadorTransacao());
 
-        Assertions.assertEquals(expectedName, nomeColetado);
+        Assertions.assertEquals(expectedName, nomeColetado.getNomeOperadorTransacao());
         Assertions.assertNotNull(findTransferencias);
         Assertions.assertNotNull(findTransferencias);
         Assertions.assertFalse(findTransferencias.isEmpty());
