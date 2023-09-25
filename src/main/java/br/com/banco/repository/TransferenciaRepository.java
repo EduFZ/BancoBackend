@@ -32,4 +32,13 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, In
     @Query("SELECT t FROM Transferencia t WHERE t.dataTransferencia BETWEEN :dataTransferenciaInicial AND :dataTransferenciaFinal")
     List<Transferencia> findByDataBetween(@Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial, @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal);
 
+    //---------------- método teste -------------------
+    @Query("SELECT t FROM Transferencia t WHERE" +
+            "(:nomeOperadorTransacao IS NULL OR t.nomeOperadorTransacao = :nomeOperadorTransacao) AND" +
+            "(:dataTransferenciaInicial IS NULL OR t.dataTransferencia >= :dataTransferenciaInicial) AND" +
+            "(:dataTransferenciaFinal IS NULL OR t.dataTransferencia <= :dataTransferenciaFinal)")
+    List<Transferencia> findByFilters(@Param("nomeOperadorTransacao") String nomeOperadorTransacao,
+                                      @Param("dataTransferenciaInicial") LocalDate dataTransferenciaInicial,
+                                      @Param("dataTransferenciaFinal") LocalDate dataTransferenciaFinal);
+
 }
