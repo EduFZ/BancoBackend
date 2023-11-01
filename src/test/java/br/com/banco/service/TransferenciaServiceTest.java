@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
-public class TransferenciaServiceTest {
+class TransferenciaServiceTest {
 
     @InjectMocks
     private TransferenciaService transferenciaService;
@@ -35,19 +35,19 @@ public class TransferenciaServiceTest {
 
         BDDMockito.when(transferenciaRepositoryMock.findAll()).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByOperadorTransacaoAndDataBetween(any(), any(), any())).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), any(), any())).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByNomeOperadorTransacao(any())).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), null, null)).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findTransferenciaFromDataInicial(any())).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, any(), null)).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findTransferenciaUntilDataFinal(any())).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, null, any())).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByDataBetween(any(), any())).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, any(), any())).thenReturn(listaTransf);
     }
 
     @Test
-    public void testFindByFiltersWithNullParameters() throws ExceptionMessage {
+    void testFindByFiltersWithNullParameters() throws ExceptionMessage {
 
         List<Transferencia> findTransferencias = transferenciaRepositoryMock.findAll();
 
@@ -58,11 +58,11 @@ public class TransferenciaServiceTest {
     }
 
     @Test
-    public void testFindByFiltersWithAllParameters() throws ExceptionMessage {
+    void testFindByFiltersWithAllParameters() throws ExceptionMessage {
         String expectedName = TransferenciaCreator.createTransferencia().getNomeOperadorTransacao();
 
         List<Transferencia> findTransferencias = transferenciaRepositoryMock
-                .findByOperadorTransacaoAndDataBetween("Ciclano", LocalDate.of(2019, 05, 15),
+                .findByFilters("Ciclano", LocalDate.of(2019, 05, 15),
                         LocalDate.of(2020, 03, 18));
 
         System.out.println("Nome esperado: " + expectedName);
@@ -76,11 +76,11 @@ public class TransferenciaServiceTest {
     }
 
     @Test
-    public void testFindByFiltersWithNameParameter() throws ExceptionMessage {
+    void testFindByFiltersWithNameParameter() throws ExceptionMessage {
         String expectedName = TransferenciaCreator.createTransferencia().getNomeOperadorTransacao();
 
         List<Transferencia> findTransferencias = transferenciaRepositoryMock
-                .findByNomeOperadorTransacao("Ciclano");
+                .findByFilters("Ciclano", null, null);
 
         Transferencia nomeColetado = findTransferencias.get(0);
 
@@ -95,11 +95,11 @@ public class TransferenciaServiceTest {
     }
 
     @Test
-    public void testFindByFiltersWithDataInicialParameter() throws ExceptionMessage {
+    void testFindByFiltersWithDataInicialParameter() throws ExceptionMessage {
         String expectedName = TransferenciaCreator.createTransferencia().getNomeOperadorTransacao();
 
         List<Transferencia> findTransferencias = transferenciaRepositoryMock
-                .findTransferenciaFromDataInicial(LocalDate.of(2019, 05, 15));
+                .findByFilters(null, LocalDate.of(2019, 05, 15), null);
 
         System.out.println("Nome esperado: " + expectedName);
         System.out.println("Nome retornado: " + findTransferencias.get(0).getNomeOperadorTransacao());
@@ -112,11 +112,11 @@ public class TransferenciaServiceTest {
     }
 
     @Test
-    public void testFindByFiltersUntilDataFinalParameter() throws ExceptionMessage {
+    void testFindByFiltersUntilDataFinalParameter() throws ExceptionMessage {
         String expectedName = TransferenciaCreator.createTransferencia().getNomeOperadorTransacao();
 
         List<Transferencia> findTransferencias = transferenciaRepositoryMock
-                .findTransferenciaFromDataInicial(LocalDate.of(2020, 03, 18));
+                .findByFilters(null, null, LocalDate.of(2020, 03, 18));
 
         System.out.println("Nome esperado: " + expectedName);
         System.out.println("Nome retornado: " + findTransferencias.get(0).getNomeOperadorTransacao());
@@ -129,11 +129,11 @@ public class TransferenciaServiceTest {
     }
 
     @Test
-    public void testFindByFiltersWithAllDataParameters() throws ExceptionMessage {
+    void testFindByFiltersWithAllDataParameters() throws ExceptionMessage {
         String expectedName = TransferenciaCreator.createTransferencia().getNomeOperadorTransacao();
 
         List<Transferencia> findTransferencias = transferenciaRepositoryMock
-                .findByDataBetween(LocalDate.of(2019, 05, 15), LocalDate.of(2020, 03, 18));
+                .findByFilters(null, LocalDate.of(2019, 05, 15), LocalDate.of(2020, 03, 18));
 
         System.out.println("Nome esperado: " + expectedName);
         System.out.println("Nome retornado: " + findTransferencias.get(0).getNomeOperadorTransacao());
@@ -146,8 +146,8 @@ public class TransferenciaServiceTest {
     }
 
     @Test
-    public void testFindByFiltersWithNameParameterDoesNotExist() throws ExceptionMessage {
-        BDDMockito.when(transferenciaRepositoryMock.findByNomeOperadorTransacao(any())).thenAnswer(invocation -> Collections.emptyList());
+    void testFindByFiltersWithNameParameterDoesNotExist() throws ExceptionMessage {
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), null, null)).thenAnswer(invocation -> Collections.emptyList());
 
         Assertions.assertThrows(ExceptionMessage.class, () -> transferenciaService.findByFilters("Ciclano", null, null));
 

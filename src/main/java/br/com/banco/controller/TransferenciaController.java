@@ -3,8 +3,6 @@ package br.com.banco.controller;
 import br.com.banco.dto.TransferenciaDto;
 import br.com.banco.exceptions.ExceptionMessage;
 import br.com.banco.service.TransferenciaService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
