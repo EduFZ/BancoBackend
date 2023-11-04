@@ -9,17 +9,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
 class TransferenciaServiceTest {
@@ -33,25 +32,29 @@ class TransferenciaServiceTest {
     void setUp() throws ExceptionMessage {
         List<Transferencia> listaTransf = Arrays.asList(TransferenciaCreator.createTransferencia());
 
-        BDDMockito.when(transferenciaRepositoryMock.findAll()).thenReturn(listaTransf);
+        TransferenciaRepository transferenciaRepositoryMock = Mockito.mock(TransferenciaRepository.class);
+
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, null, null)).thenReturn(listaTransf);
 
         BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), any(), any())).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), null, null)).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters("Ciclano", null, null)).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, any(), null)).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, LocalDate.of(2019, 05, 15), null)).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, null, any())).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, null, LocalDate.of(2020, 03, 18))).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, any(), any())).thenReturn(listaTransf);
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, LocalDate.of(2019, 05, 15), LocalDate.of(2020, 03, 18))).thenReturn(listaTransf);
+
+        this.transferenciaRepositoryMock = transferenciaRepositoryMock;
+
     }
 
     @Test
     void testFindByFiltersWithNullParameters() throws ExceptionMessage {
 
-        List<Transferencia> findTransferencias = transferenciaRepositoryMock.findAll();
+        List<Transferencia> findTransferencias = transferenciaRepositoryMock.findByFilters(null, null, null);
 
-        Assertions.assertNotNull(findTransferencias);
         Assertions.assertNotNull(findTransferencias);
         Assertions.assertFalse(findTransferencias.isEmpty());
 
@@ -69,7 +72,6 @@ class TransferenciaServiceTest {
         System.out.println("Nome retornado: " + findTransferencias.get(0).getNomeOperadorTransacao());
 
         Assertions.assertEquals(expectedName, findTransferencias.get(0).getNomeOperadorTransacao());
-        Assertions.assertNotNull(findTransferencias);
         Assertions.assertNotNull(findTransferencias);
         Assertions.assertFalse(findTransferencias.isEmpty());
 
@@ -89,7 +91,6 @@ class TransferenciaServiceTest {
 
         Assertions.assertEquals(expectedName, nomeColetado.getNomeOperadorTransacao());
         Assertions.assertNotNull(findTransferencias);
-        Assertions.assertNotNull(findTransferencias);
         Assertions.assertFalse(findTransferencias.isEmpty());
 
     }
@@ -105,7 +106,6 @@ class TransferenciaServiceTest {
         System.out.println("Nome retornado: " + findTransferencias.get(0).getNomeOperadorTransacao());
 
         Assertions.assertEquals(expectedName, findTransferencias.get(0).getNomeOperadorTransacao());
-        Assertions.assertNotNull(findTransferencias);
         Assertions.assertNotNull(findTransferencias);
         Assertions.assertFalse(findTransferencias.isEmpty());
 
@@ -123,7 +123,6 @@ class TransferenciaServiceTest {
 
         Assertions.assertEquals(expectedName, findTransferencias.get(0).getNomeOperadorTransacao());
         Assertions.assertNotNull(findTransferencias);
-        Assertions.assertNotNull(findTransferencias);
         Assertions.assertFalse(findTransferencias.isEmpty());
 
     }
@@ -140,14 +139,14 @@ class TransferenciaServiceTest {
 
         Assertions.assertEquals(expectedName, findTransferencias.get(0).getNomeOperadorTransacao());
         Assertions.assertNotNull(findTransferencias);
-        Assertions.assertNotNull(findTransferencias);
         Assertions.assertFalse(findTransferencias.isEmpty());
 
     }
 
     @Test
     void testFindByFiltersWithNameParameterDoesNotExist() throws ExceptionMessage {
-        BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), null, null)).thenAnswer(invocation -> Collections.emptyList());
+
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters("Ciclano", null, null)).thenReturn(new ArrayList<>());
 
         Assertions.assertThrows(ExceptionMessage.class, () -> transferenciaService.findByFilters("Ciclano", null, null));
 

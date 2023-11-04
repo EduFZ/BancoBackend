@@ -28,11 +28,7 @@ public class TransferenciaService {
         LocalDate dataInicial1 = (dataInicial != null) ? LocalDate.parse(dataInicial) : null;
         LocalDate dataFinal1 = (dataFinal != null) ? LocalDate.parse(dataFinal) : null;
 
-        if (nomeOperador == null && dataInicial1 == null && dataFinal1 == null){
-            transferencias = transferenciaRepository.findAll();
-        } else {
-            transferencias = transferenciaRepository.findByFilters(nomeOperador, dataInicial1, dataFinal1);
-        }
+        transferencias = transferenciaRepository.findByFilters(nomeOperador, dataInicial1, dataFinal1);
 
         if (transferencias.isEmpty()) {
             throw new ExceptionMessage("Nenhum parâmetro encontrado");
