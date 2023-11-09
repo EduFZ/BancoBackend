@@ -36,8 +36,6 @@ class TransferenciaServiceTest {
 
         BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, null, null)).thenReturn(listaTransf);
 
-        BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), any(), any())).thenReturn(listaTransf);
-
         BDDMockito.when(transferenciaRepositoryMock.findByFilters("Ciclano", null, null)).thenReturn(listaTransf);
 
         BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, LocalDate.of(2019, 05, 15), null)).thenReturn(listaTransf);
@@ -62,6 +60,9 @@ class TransferenciaServiceTest {
 
     @Test
     void testFindByFiltersWithAllParameters() throws ExceptionMessage {
+        List<Transferencia> listaTransf = Arrays.asList(TransferenciaCreator.createTransferencia());
+        BDDMockito.when(transferenciaRepositoryMock.findByFilters(any(), any(), any())).thenReturn(listaTransf);
+
         String expectedName = TransferenciaCreator.createTransferencia().getNomeOperadorTransacao();
 
         List<Transferencia> findTransferencias = transferenciaRepositoryMock
