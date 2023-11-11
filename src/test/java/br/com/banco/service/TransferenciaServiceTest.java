@@ -1,7 +1,6 @@
 package br.com.banco.service;
 
 import br.com.banco.domain.Transferencia;
-import br.com.banco.dto.TransferenciaDto;
 import br.com.banco.exceptions.ExceptionMessage;
 import br.com.banco.repository.TransferenciaRepository;
 import br.com.banco.util.TransferenciaCreator;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
@@ -32,8 +30,6 @@ class TransferenciaServiceTest {
     void setUp() throws ExceptionMessage {
         List<Transferencia> listaTransf = Arrays.asList(TransferenciaCreator.createTransferencia());
 
-        TransferenciaRepository transferenciaRepositoryMock = Mockito.mock(TransferenciaRepository.class);
-
         BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, null, null)).thenReturn(listaTransf);
 
         BDDMockito.when(transferenciaRepositoryMock.findByFilters("Ciclano", null, null)).thenReturn(listaTransf);
@@ -43,8 +39,6 @@ class TransferenciaServiceTest {
         BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, null, LocalDate.of(2020, 03, 18))).thenReturn(listaTransf);
 
         BDDMockito.when(transferenciaRepositoryMock.findByFilters(null, LocalDate.of(2019, 05, 15), LocalDate.of(2020, 03, 18))).thenReturn(listaTransf);
-
-        this.transferenciaRepositoryMock = transferenciaRepositoryMock;
 
     }
 
